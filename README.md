@@ -98,8 +98,6 @@ Simply open `frontend/index.html` in your browser — no build step required.
 
 ## 📸 Screenshots
 
-> Add your screenshots to a `screenshots/` folder in the project root, then reference them below.
-
 ### Ask a Question
 ![Q&A Screenshot](screenshots/qa.png)
 
