@@ -64,13 +64,7 @@ EduGenie/
 
 ## 🚀 Getting Started
 
-### 1. Clone the repository
-```bash
-git clone https://github.com/Himabindhu-123/EduGenie.git
-cd EduGenie
-```
-
-### 2. Set up the backend
+### 1. Set up the backend
 ```bash
 cd backend
 python -m venv venv
@@ -78,20 +72,20 @@ venv\Scripts\activate        # Windows
 pip install -r requirements.txt
 ```
 
-### 3. Add your Gemini API key
+### 2. Add your Gemini API key
 Create a `.env` file inside the `backend/` folder:
 ```
 GEMINI_API_KEY=your_api_key_here
 ```
 Get a free key from [Google AI Studio](https://aistudio.google.com/apikey).
 
-### 4. Run the backend
+### 3. Run the backend
 ```bash
 uvicorn app.main:app --reload
 ```
 The API will be running at `http://127.0.0.1:8000` (interactive docs at `/docs`).
 
-### 5. Open the frontend
+### 4. Open the frontend
 Simply open `frontend/index.html` in your browser — no build step required.
 
 ---
