@@ -108,7 +108,7 @@ darkModeToggle.addEventListener("click", () => {
   localStorage.setItem("edugenie-dark-mode", isDark);
 });
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_BASE = "https://edugenie-3r88.onrender.com/api";
 
 // ---------- TAB SWITCHING ----------
 const tabButtons = document.querySelectorAll(".tab-btn");
