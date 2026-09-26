@@ -89,7 +89,7 @@ document.getElementById("flashcard-submit").addEventListener("click", async () =
       });
     });
   } catch (err) {
-    resultBox.innerHTML = '<p class="text-red-500 col-span-2">Error: could not reach EduGenie backend.</p>';
+    resultBox.innerHTML = `<p class="text-red-500 col-span-2">${friendlyErrorMessage(err)}</p>`;
   }
 });
 
@@ -144,7 +144,31 @@ async function callApi(endpoint, payload) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  return response.json();
+
+  let data = {};
+  try {
+    data = await response.json();
+  } catch (_) {
+    // no JSON body
+  }
+
+  if (!response.ok) {
+    const err = new Error(data.detail || `Request failed (${response.status})`);
+    err.status = response.status;
+    throw err;
+  }
+
+  return data;
+}
+
+function friendlyErrorMessage(err) {
+  if (err && err.status === 429) {
+    return "⏳ Daily AI quota reached. Please try again later (or use a paid Gemini API key).";
+  }
+  if (err && err.status === 502) {
+    return "Error: the AI service failed to respond. Please try again.";
+  }
+  return "Error: could not reach EduGenie backend.";
 }
 
 // ---------- Q&A ----------
@@ -163,7 +187,7 @@ document.getElementById("qa-submit").addEventListener("click", async () => {
     resultBox.textContent = data.response;
     saveToHistory("Q&A", question, data.response);
   } catch (err) {
-    resultBox.textContent = "Error: could not reach EduGenie backend.";
+    resultBox.textContent = friendlyErrorMessage(err);
   }
 });
 
@@ -210,7 +234,7 @@ document.getElementById("quiz-submit").addEventListener("click", async () => {
 
     saveToHistory("Quiz", topic, `${data.questions.length} questions generated`);
   } catch (err) {
-    resultBox.textContent = "Error: could not reach EduGenie backend.";
+    resultBox.textContent = friendlyErrorMessage(err);
   }
 });
 
@@ -231,7 +255,7 @@ document.getElementById("summarize-submit").addEventListener("click", async () =
     resultBox.textContent = data.summary;
     saveToHistory("Summarize", text.slice(0, 60) + "...", data.summary);
   } catch (err) {
-    resultBox.textContent = "Error: could not reach EduGenie backend.";
+    resultBox.textContent = friendlyErrorMessage(err);
   }
 });
 
@@ -270,6 +294,6 @@ document.getElementById("lp-submit").addEventListener("click", async () => {
 
     saveToHistory("Learning Path", topic, `${data.path.length} stages generated`);
   } catch (err) {
-    resultBox.textContent = "Error: could not reach EduGenie backend.";
+    resultBox.textContent = friendlyErrorMessage(err);
   }
 });

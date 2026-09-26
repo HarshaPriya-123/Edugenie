@@ -1,6 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from app.services.gemini_service import generate_content
+from app.services.gemini_service import generate_content, GeminiQuotaError, GeminiServiceError
 
 router = APIRouter()
 
@@ -44,7 +44,15 @@ Return ONLY valid JSON in this exact format, with no extra text before or after:
   ]
 }}
 """
-    raw_result = generate_content(prompt)
+    try:
+        raw_result = generate_content(prompt)
+    except GeminiQuotaError as e:
+        raise HTTPException(
+            status_code=429,
+            detail=f"Daily AI quota reached, try again later. ({e})"
+        )
+    except GeminiServiceError as e:
+        raise HTTPException(status_code=502, detail=str(e))
 
     import json
     import re

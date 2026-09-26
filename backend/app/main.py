@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import qa, quiz, summarize, learning_path, flashcards
-from app.routes import qa, quiz, summarize, learning_path
 
 app = FastAPI(title="EduGenie API", version="1.0.0")
 app.include_router(qa.router, prefix="/api", tags=["Q&A"])

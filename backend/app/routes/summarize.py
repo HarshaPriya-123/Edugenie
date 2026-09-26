@@ -1,6 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from app.services.gemini_service import generate_content
+from app.services.gemini_service import generate_content, GeminiQuotaError, GeminiServiceError
 
 router = APIRouter()
 
@@ -30,5 +30,14 @@ Text to summarize:
 
 Return only the summary, no extra commentary.
 """
-    result = generate_content(prompt)
+    try:
+        result = generate_content(prompt)
+    except GeminiQuotaError as e:
+        raise HTTPException(
+            status_code=429,
+            detail=f"Daily AI quota reached, try again later. ({e})"
+        )
+    except GeminiServiceError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+
     return {"original_length": len(request.text), "summary": result}
